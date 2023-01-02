@@ -1,0 +1,12 @@
+/home/duda/Code/rust/rusty_app/target/x86_64-pc-windows-gnu/debug/deps/libc-2f1cedacb73fbd43.rmeta: /home/duda/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.138/src/lib.rs /home/duda/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.138/src/macros.rs /home/duda/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.138/src/fixed_width_ints.rs /home/duda/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.138/src/windows/mod.rs /home/duda/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.138/src/windows/gnu/mod.rs /home/duda/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.138/src/windows/gnu/align.rs
+
+/home/duda/Code/rust/rusty_app/target/x86_64-pc-windows-gnu/debug/deps/liblibc-2f1cedacb73fbd43.rlib: /home/duda/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.138/src/lib.rs /home/duda/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.138/src/macros.rs /home/duda/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.138/src/fixed_width_ints.rs /home/duda/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.138/src/windows/mod.rs /home/duda/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.138/src/windows/gnu/mod.rs /home/duda/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.138/src/windows/gnu/align.rs
+
+/home/duda/Code/rust/rusty_app/target/x86_64-pc-windows-gnu/debug/deps/libc-2f1cedacb73fbd43.d: /home/duda/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.138/src/lib.rs /home/duda/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.138/src/macros.rs /home/duda/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.138/src/fixed_width_ints.rs /home/duda/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.138/src/windows/mod.rs /home/duda/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.138/src/windows/gnu/mod.rs /home/duda/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.138/src/windows/gnu/align.rs
+
+/home/duda/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.138/src/lib.rs:
+/home/duda/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.138/src/macros.rs:
+/home/duda/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.138/src/fixed_width_ints.rs:
+/home/duda/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.138/src/windows/mod.rs:
+/home/duda/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.138/src/windows/gnu/mod.rs:
+/home/duda/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.138/src/windows/gnu/align.rs:
