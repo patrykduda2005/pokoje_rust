@@ -110,15 +110,15 @@ fn main() {
 }*/
 
 struct PokojeManager<'a> {
-    pokoje: [[&'a mut str;2];3],
+    pokoje: [[&'a str;2];3],
 }
 
 impl PokojeManager<'_> {
-    fn wez_pozycje(&self) -> usize {
+    fn wez_pozycje(&self, n_zapytania: usize) -> usize {
         loop {
             let mut input = String::new();
-            //dialog(n_zapytania);
-            //wyswietl_pokoje(&self.pokoje);
+            dialog(n_zapytania);
+            self.wyswietl_pokoje();
 
             io::stdin().read_line(&mut input).expect("To nie jest ciag znakow");
             clearscreen::clear().expect("Failed to clear terminal");
@@ -148,8 +148,67 @@ impl PokojeManager<'_> {
 }
 
 fn main() {
-    let 
-    let game = PokojeManager {
-        pokoje: [["",""]["",""]["",""]];
+    let pokoje: [[&str;2];3] = [["",""],["",""],["",""]];
+    let mut game = PokojeManager {
+        pokoje: pokoje,
     };
+
+    dialog(0);
+
+    let pozycja: usize = game.wez_pozycje(1);
+    if game.pokoje[pozycja][0] == "" {
+        game.pokoje[pozycja][0] = "Kromka"
+    } else if game.pokoje[pozycja][1] == "" {
+        game.pokoje[pozycja][1] = "Kromka"
+    }
+
+    let pozycja = game.wez_pozycje(2);
+    if game.pokoje[pozycja][0] == "" {
+        game.pokoje[pozycja][0] = "Szarak"
+    } else if game.pokoje[pozycja][1] == "" {
+        game.pokoje[pozycja][1] = "Szarak"
+    }
+
+    let pozycja = game.wez_pozycje(3);
+    if game.pokoje[pozycja][0] == "" {
+        game.pokoje[pozycja][0] = "Mumin"
+    } else if game.pokoje[pozycja][1] == "" {
+        game.pokoje[pozycja][1] = "Mumin"
+    }
+
+    let pozycja = game.wez_pozycje(4);
+    if game.pokoje[pozycja][0] == "" {
+        game.pokoje[pozycja][0] = "Lechański"
+    } else if game.pokoje[pozycja][1] == "" {
+        game.pokoje[pozycja][1] = "Lechański"
+    }
+
+    let pozycja = game.wez_pozycje(5);
+    if game.pokoje[pozycja][0] == "" {
+        game.pokoje[pozycja][0] = "Forzaob"
+    } else if game.pokoje[pozycja][1] == "" {
+        game.pokoje[pozycja][1] = "Forzaob"
+    }
+
+    let pozycja = game.wez_pozycje(6);
+    if game.pokoje[pozycja][0] == "" {
+        game.pokoje[pozycja][0] = "Duda"
+    } else if game.pokoje[pozycja][1] == "" {
+        game.pokoje[pozycja][1] = "Duda"
+    }
+
+    game.wyswietl_pokoje();
+    
+    for pokoj in game.pokoje.iter() {
+        if (pokoj[0] == "Szarak" && pokoj[1] == "Lechański") || (pokoj[1] == "Szarak" && pokoj[0] == "Lechański") {
+            println!("Lechański umarł");
+        }
+        if (pokoj[0] == "Mumin" && pokoj[1] == "Forzaob") || (pokoj[1] == "Mumin" && pokoj[0] == "Forzaob") {
+            println!("Klony się połączyły co wywołało wybuch porównalny do wybuchy bomby atomowej");
+        }
+    }
+
+    println!("Wciśnij enter aby zakończyć");
+    let mut zatrzymajka = String::new();
+    io::stdin().read_line(&mut zatrzymajka).unwrap();
 }
