@@ -40,7 +40,7 @@ impl Pokoje<'_> {
                     };
                     let arg2: usize = match iter.next() {
                         None => break Err("Nie napisałeś gdzie chcesz to przenieść"),
-                        Some(v) => match v.parse() {
+                        Some(v) => match v.parse::<usize>() {
                             Ok(v) => v,
                             Err(_e) => break Err("To nie jest liczba")
                         },
@@ -55,19 +55,19 @@ impl Pokoje<'_> {
         match input {
             Err(e) => println!("{}", e),
             Ok(c) => match c {
-                Command::Move(fpos, tpos) => {
-                    let what: &str = match fpos {
-                        Position::Pokoje(p, c) => {
-                            let what = self.pokoje[p][c];
-                            self.pokoje[p][c] = "";
+                Command::Move(frompos, topos) => {
+                    let what: &str = match frompos {
+                        Position::Pokoje(pokoj, character) => {
+                            let what = self.pokoje[pokoj][character];
+                            self.pokoje[pokoj][character] = "";
                             what
                         }
-                        Position::Zewnatrz(c) => self.zewnatrz.remove(c)
+                        Position::Zewnatrz(character) => self.zewnatrz.remove(character)
                     };
-                    match tpos {
+                    match topos {
                         0 => self.zewnatrz.push(&what),
                         _ => {
-                            let iter = self.pokoje[tpos].iter_mut();
+                            let iter = self.pokoje[topos - 1].iter_mut();
                             for place in iter {
                                 if *place == "" {
                                     *place = &what;
@@ -116,9 +116,14 @@ fn main() {
     loop {
         gra.wyswietl_pokoje();
         gra.get_input();
+
         println!("Wcisnij enter aby kontynuowac...");
         let mut input = String::new();
         io::stdin().read_line(&mut input).expect("WHAT");
-        print!("{}[2J", 27 as char);
+        match input.as_str().trim() {
+           "exit" => break,
+           _ => print!("{}[2J", 27 as char),
+        }
+
     }
 }
