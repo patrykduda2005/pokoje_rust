@@ -1,4 +1,5 @@
 use std::io;
+use std::{thread, time};
 
 enum Command {
     Move(Position, usize),
@@ -70,6 +71,7 @@ impl Pokoje<'_> {
                             for place in iter {
                                 if *place == "" {
                                     *place = &what;
+                                    break;
                                 }
                             }
                         },
@@ -95,11 +97,28 @@ impl Pokoje<'_> {
         return Err("Nie znaleziono człowieka");
     }
 
+    fn wyswietl_pokoje(&self) {
+        println!("-----------------------------------(Zewnatrz)-------------------------------------");
+        println!("{:?}", self.zewnatrz);
+        println!("----------------------------------------------------------------------------------");
+        println!("-----------------------------------(Pokoje)---------------------------------------");
+        for (nrpokoju, pokoj) in self.pokoje.iter().enumerate() {
+            println!("Pokoj numero {}", nrpokoju + 1);
+            println!("{:?}", pokoj);
+        }
+        println!("----------------------------------------------------------------------------------");
+    }
+
 }
 
 fn main() {
     let mut gra = Pokoje::new();
     loop {
+        gra.wyswietl_pokoje();
         gra.get_input();
+        println!("Wcisnij enter aby kontynuowac...");
+        let mut input = String::new();
+        io::stdin().read_line(&mut input).expect("WHAT");
+        print!("{}[2J", 27 as char);
     }
 }
