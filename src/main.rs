@@ -1,4 +1,3 @@
-
 mod ThePokoje {
     use std::io;
 
@@ -124,15 +123,22 @@ mod ThePokoje {
             }
             println!("--------------------------------------------------------------");
         }
-        pub fn znajdz_pare(&self, dla: &str) -> &str {
-            let pokoj: usize;
+        pub fn znajdz_pare(&self, dla: &str) -> Option<&str> {
+            let mut pokojm: usize = 9; //9 - wartosc nie mozliwa do uzyskania
             for pokoj in self.pokoje.iter() {
-                for (character) in pokoj.iter().enumerate() {
-                    if character == dla {
-
+                for (id, character) in pokoj.iter().enumerate() {
+                    if *character == dla {
+                        pokojm = id;
                     }
                 }
             }
+            if pokojm == 9 {return None} //jesli nie znalazlo pary
+            for character in self.pokoje[pokojm].iter() {
+                if *character != dla {
+                    return Some(character);
+                } 
+            }
+            return None;
         }
 
     }
@@ -146,6 +152,8 @@ fn main() {
         println!("wpisz komende \"help\" aby wyswietlic pomoc");
         gra.wyswietl_pokoje();
         gra.get_input();
+
+        println!("{:?}", gra.znajdz_pare("Szary"));
 
         println!("Wcisnij enter aby kontynuowac...");
         let mut input = String::new();
