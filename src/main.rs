@@ -1,4 +1,4 @@
-mod ThePokoje {
+mod the_pokoje {
     use std::io;
 
     enum Command {
@@ -25,37 +25,55 @@ mod ThePokoje {
             }
         }
 
-        pub fn get_input<'a>(&'a mut self) {
-            let input: Result<Command, &str> = loop {
-                let mut input = String::new();
+        pub fn get_input(&mut self) {
+            let input: Result<Command, String> = {
+                let mut input:String = String::new();
                 io::stdin().read_line(&mut input).expect("Nie podano tekstu");
-                let mut iter = input.split_whitespace();
-                match iter.next() {
-                    Some("move") => {
-                        let arg1: Position = match iter.next() {
-                            None => break Err("Nie napisałeś co chcesz przenieść"),
-                            Some(v) => match self.find(v) {
-                                Err(e) => break Err(e),
-                                Ok(v) => v,
-                            },
-                        };
-                        let arg2: usize = match iter.next() {
-                            None => break Err("Nie napisałeś gdzie chcesz to przenieść"),
-                            Some(v) => match v.parse::<usize>() {
-                                Ok(v) => v,
-                                Err(_e) => break Err("To nie jest liczba")
-                            },
-                        };
-                        break Ok(Command::Move(arg1, arg2));
-                    },
-                    Some("help") => {
-                        break Ok(Command::Help);
-                    },
-                    None => break Err("Nie ma takiej komendy"),
-                    _ => break Err("Nie ma takiej komendy"),
-                }
+                self.string_to_command(input)
             };
+            self.execute_command(input);
+        }
 
+        fn string_to_command(&self, input: String) -> Result<Command, String> {
+            let mut iter = input.split_whitespace();
+            match iter.next() {
+                Some("move") => {
+                    let from: Position = match iter.next() {
+                        None => return Err(String::from("Nie napisałeś co chcesz przenieść")),
+                        Some(v) => match self.find(v) {
+                            Err(e) => return Err(e),
+                            Ok(v) => v,
+                        },
+                    };
+                    let to: usize = match iter.next() {
+                        None => return Err(String::from("Nie napisałeś gdzie chcesz to przenieść")),
+                        Some(v) => match v.parse::<usize>() {
+                            Ok(v @ 1..=3) => {
+                                let mut is_there_room: bool = false;
+                                for miejsce in self.pokoje[v - 1].iter() {
+                                    if *miejsce == "" {
+                                        is_there_room = true;
+                                        break;
+                                    } 
+                                }
+                                if !is_there_room {return Err(String::from("Nie ma miejsca w tym pokoju"))}
+                                v
+                            },
+                            Ok(v @ 0) => v,
+                            Ok(_) => return Err(String::from("Nie ma takiego pokoju")),
+                            Err(_e) => return Err(String::from("To nie jest liczba")),
+                        },
+                    };
+                    return Ok(Command::Move(from, to));
+                },
+                Some("help") => {
+                    return Ok(Command::Help);
+                },
+                Some(_) | None => return Err(String::from("Nie ma takiej komendy")),
+            }
+        }
+
+        fn execute_command(&mut self, input: Result<Command, String>) {
             match input {
                 Err(e) => println!("{}", e),
                 Ok(c) => match c {
@@ -86,9 +104,10 @@ mod ThePokoje {
                     },
                 }
             }
+
         }
 
-        fn find(&self, what: &str) -> Result<Position, &str> {
+        fn find(&self, what: &str) -> Result<Position, String> {
             for p in self.pokoje.iter().enumerate() {
                 for v in p.1.iter().enumerate() {
                     if *v.1 == what {
@@ -101,7 +120,7 @@ mod ThePokoje {
                     return Ok(Position::Zewnatrz(v.0));
                 }
             }
-            return Err("Nie znaleziono człowieka");
+            return Err(String::from("Nie znaleziono człowieka"));
         }
         
         fn help(&self) {
@@ -125,8 +144,8 @@ mod ThePokoje {
         }
         pub fn znajdz_pare(&self, dla: &str) -> Option<&str> {
             let mut pokojm: usize = 9; //9 - wartosc nie mozliwa do uzyskania
-            for pokoj in self.pokoje.iter() {
-                for (id, character) in pokoj.iter().enumerate() {
+            for (id, pokoj) in self.pokoje.iter().enumerate() {
+                for character in pokoj.iter() {
                     if *character == dla {
                         pokojm = id;
                     }
@@ -134,7 +153,7 @@ mod ThePokoje {
             }
             if pokojm == 9 {return None} //jesli nie znalazlo pary
             for character in self.pokoje[pokojm].iter() {
-                if *character != dla {
+                if *character != dla && *character != "" {
                     return Some(character);
                 } 
             }
@@ -147,7 +166,7 @@ mod ThePokoje {
 use std::io;
 
 fn main() {
-    let mut gra = ThePokoje::Pokoje::new();
+    let mut gra = the_pokoje::Pokoje::new();
     loop {
         println!("wpisz komende \"help\" aby wyswietlic pomoc");
         gra.wyswietl_pokoje();
