@@ -1,5 +1,6 @@
 mod the_pokoje;
 use std::io;
+use clearscreen;
 
 fn main() {
     let mut gra = the_pokoje::Pokoje::new();
@@ -13,7 +14,7 @@ fn main() {
         io::stdin().read_line(&mut input).expect("WHAT");
         match input.as_str().trim() {
            "exit" => break,
-           _ => print!("{}[2J", 27 as char),
+           _ => clearscreen::clear().expect("Nie udało sie wyczyscic ekranu"),
         }
 
     }
