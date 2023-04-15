@@ -13,15 +13,15 @@ mod the_pokoje {
 
 
     pub struct Pokoje<'a> {
-        pokoje: [[&'a str; 2]; 3],
+        pokoje: [[&'a str; 2]; 4],
         zewnatrz: Vec<&'a str>
     }
 
     impl Pokoje<'_> {
         pub fn new() -> Self {
             Pokoje {
-                pokoje: [["", ""],["",""],["",""]],
-                zewnatrz: vec!["Lechański", "Szary", "Duda", "Lutak", "Mumin", "Forzaob"],
+                pokoje: [["", ""],["",""],["",""],["",""]],
+                zewnatrz: vec!["Lechański", "Szary", "Duda", "Lutak", "Mumin", "Forzaob", "Krzak", "Hospod"],
             }
         }
 
@@ -48,7 +48,7 @@ mod the_pokoje {
                     let to: usize = match iter.next() {
                         None => return Err(String::from("Nie napisałeś gdzie chcesz to przenieść")),
                         Some(v) => match v.parse::<usize>() {
-                            Ok(v @ 1..=3) => {
+                            Ok(v @ 1..=4) => {
                                 let mut is_there_room: bool = false;
                                 for miejsce in self.pokoje[v - 1].iter() {
                                     if *miejsce == "" {
@@ -142,7 +142,8 @@ mod the_pokoje {
             }
             println!("--------------------------------------------------------------");
         }
-        pub fn znajdz_pare(&self, dla: &str) -> Option<&str> {
+
+        fn znajdz_pare(&self, dla: &str) -> Option<&str> {
             let mut pokojm: usize = 9; //9 - wartosc nie mozliwa do uzyskania
             for (id, pokoj) in self.pokoje.iter().enumerate() {
                 for character in pokoj.iter() {
@@ -160,6 +161,27 @@ mod the_pokoje {
             return None;
         }
 
+        pub fn robienie_par(&self) {
+            for pokoj in self.pokoje {
+                for osoba in pokoj {
+                    match self.znajdz_pare(osoba) {
+                        Some(para) => {
+                            match (osoba, para) {
+                                ("Forzaob", "Mumin") => println!("Klony nieznanego człowieka (Forzaob i Mumin) połączyły się w wielką kulę energii i zniszczyły wszechświat."),
+                                ("Szary", "Lechański") => println!("Szary zabił Lechańskiego"),
+                                ("Szary", "Duda") => println!("Szary zabił Dude"),
+                                ("Szary", "Hospod") => println!("Szary zabił Hospoda"),
+                                ("Szary", "Krzak") => println!("Szary zabił Krzaka"),
+                                ("Duda", "Lutak") => println!("Gaming"),
+                                ("Krzak", "Hospod") => println!("Powstaje totalny banger"),
+                                _ => (),
+                            }
+                        }
+                        None => (),
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -172,8 +194,6 @@ fn main() {
         gra.wyswietl_pokoje();
         gra.get_input();
 
-        println!("{:?}", gra.znajdz_pare("Szary"));
-
         println!("Wcisnij enter aby kontynuowac...");
         let mut input = String::new();
         io::stdin().read_line(&mut input).expect("WHAT");
@@ -183,4 +203,5 @@ fn main() {
         }
 
     }
+    gra.robienie_par();
 }
