@@ -1,1 +1,1 @@
-/data/data/com.termux/files/home/Code/git/pokoje_rust/target/debug/rusty_app: /data/data/com.termux/files/home/Code/git/pokoje_rust/src/main.rs /data/data/com.termux/files/home/Code/git/pokoje_rust/src/the_pokoje.rs
+/home/duda/Code/rust/rusty_app/target/debug/rusty_app: /home/duda/Code/rust/rusty_app/src/main.rs /home/duda/Code/rust/rusty_app/src/the_pokoje.rs

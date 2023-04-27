@@ -8,7 +8,7 @@ pub enum Command {
 }
 
 enum Zmiana<'a> {
-    Flesh(&'a str),
+    Replace(Vec<&'a str>, &'a str),
 }
 
 pub enum Position {
@@ -202,32 +202,38 @@ impl Pokoje<'_> {
                         match (osoba, para) {
                             ("Forzaob", "Mumin") => {
                                 println!("Klony nieznanego człowieka (Forzaob i Mumin) połączyły się w wielką kulę energii i zniszczyły wszechświat.");
+                                self.zmiany.push(Zmiana::Replace(vec!["Forzaob", "Mumin"], "Kula energi"))
                             },
                             ("Szary", "Lechański") => {
                                 println!("Szary zabił Lechańskiego");
                                 println!("Zyskales nowy przedmiot: Flesh !");
-                                self.zmiany.push(Zmiana::Flesh("Lechański"))
+                                self.zmiany.push(Zmiana::Replace(vec!["Lechański"], "Flesh"))
                             },
                             ("Szary", "Duda") => {
                                 println!("Szary zabił Dude");
                                 println!("Zyskales nowy przedmiot: Flesh !");
-                                self.zmiany.push(Zmiana::Flesh("Duda"))
+                                self.zmiany.push(Zmiana::Replace(vec!["Duda"], "Flesh"))
                             },
                             ("Szary", "Hospod") => {
                                 println!("Szary zabił Hospoda");
                                 println!("Zyskales nowy przedmiot: Flesh !");
-                                self.zmiany.push(Zmiana::Flesh("Hospod"))
+                                self.zmiany.push(Zmiana::Replace(vec!["Hospod"], "Flesh"))
                             },
                             ("Szary", "Krzak") => {
                                 println!("Szary zabił Krzaka");
                                 println!("Zyskales nowy przedmiot: Flesh !");
-                                self.zmiany.push(Zmiana::Flesh("Krzak"))
+                                self.zmiany.push(Zmiana::Replace(vec!["Krzak"], "Flesh"))
                             },
                             ("Duda", "Lutak") => {
                                 println!("Gaming");
                             },
                             ("Krzak", "Hospod") => {
                                 println!("Powstaje totalny banger");
+                            },
+                            ("Hospod", "Flesh") => {
+                                println!("Hospod zamienia ciało ludzkie na wódke");
+                                println!("Zyskales nowy przedmiot: Wódka !");
+                                self.zmiany.push(Zmiana::Replace(vec!["Flesh"], "Wódka"))
                             },
                             _ => (),
                         }
@@ -241,19 +247,31 @@ impl Pokoje<'_> {
     pub fn soft_reset(&self) -> Self {
         let mut nowy = self::Pokoje::new();
         for zmiana in self.zmiany.iter() {
-            match *zmiana {
-                Zmiana::Flesh(ofiara) => {
-                    let id: usize = nowy.zewnatrz.iter()
-                        .enumerate()
-                        .filter(|(_, osoba)| *osoba == &ofiara)
-                        .map(|x| x.0)
-                        .collect::<Vec<usize>>()
-                        .pop().expect("Zmiana Flesh nie znalazla ofiary");
-                    nowy.zewnatrz.remove(id);
-                    nowy.zewnatrz.push("Flesh");
-                    nowy.lista_osob.remove(id);
-                    nowy.lista_osob.push("Flesh");
-                    nowy.zmiany.push(Zmiana::Flesh(ofiara));
+            match zmiana {
+                Zmiana::Replace(ofiary, zamiana_na) => {
+                    let mut forward_ofiary = vec![];
+                    for (i, ofiara) in ofiary.iter().enumerate() {
+                        let id: usize = nowy.lista_osob.iter()
+                            .enumerate()
+                            .filter(|(_, osoba)| *osoba == ofiara)
+                            .map(|x| x.0)
+                            .collect::<Vec<usize>>()
+                            .pop().expect("Znalezienie ofiary sie nie powiodlo");
+                        nowy.zewnatrz.remove(id);
+                        if i > 0 {
+                            nowy.zewnatrz.push("");
+                        } else {
+                            nowy.zewnatrz.push(*zamiana_na);
+                        }
+                        nowy.lista_osob.remove(id);
+                        if i > 0 {
+                            nowy.lista_osob.push("");
+                        } else {
+                            nowy.lista_osob.push(*zamiana_na);
+                        }
+                        forward_ofiary.push(*ofiara);
+                    }
+                    nowy.zmiany.push(Zmiana::Replace(forward_ofiary, zamiana_na));
                 }
             }
         }
