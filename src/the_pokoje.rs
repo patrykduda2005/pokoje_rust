@@ -166,12 +166,18 @@ impl Pokoje<'_> {
     pub fn wyswietl_pokoje(&self) {
         println!("wpisz komende \"help\" aby wyswietlic pomoc");
         println!("-------------------------(Zewnatrz)---------------------------");
-        println!("{:?}", self.zewnatrz);
+        for osob in self.zewnatrz.iter() {
+            print!(" {osob},");
+        }
+        println!();
         println!("--------------------------------------------------------------");
         println!("-------------------------(Pokoje)-----------------------------");
         for (nrpokoju, pokoj) in self.pokoje.iter().enumerate() {
             println!("Pokoj numero {}", nrpokoju + 1);
-            println!("{:?}", pokoj);
+            for osob in pokoj.iter() {
+                print!(" {osob},");
+            }
+            println!();
         }
         println!("--------------------------------------------------------------");
     }
@@ -258,15 +264,11 @@ impl Pokoje<'_> {
                             .collect::<Vec<usize>>()
                             .pop().expect("Znalezienie ofiary sie nie powiodlo");
                         nowy.zewnatrz.remove(id);
-                        if i > 0 {
-                            nowy.zewnatrz.push("");
-                        } else {
+                        if i == 0 {
                             nowy.zewnatrz.push(*zamiana_na);
                         }
                         nowy.lista_osob.remove(id);
-                        if i > 0 {
-                            nowy.lista_osob.push("");
-                        } else {
+                        if i == 0 {
                             nowy.lista_osob.push(*zamiana_na);
                         }
                         forward_ofiary.push(*ofiara);
