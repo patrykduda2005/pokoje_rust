@@ -34,7 +34,7 @@ impl Pokoje<'_> {
         }
     }
 
-    pub fn get_input(&mut self) -> Result<Command, String> {
+    pub fn get_command(&mut self) -> Result<Command, String> {
         let mut input:String = String::new();
         io::stdin().read_line(&mut input).expect("Nie podano tekstu");
         return self.string_to_command(input);
@@ -103,16 +103,36 @@ impl Pokoje<'_> {
 
     }
 
+    fn isolate<'a>(&'a self, mut r#where: Vec<&'a str>) -> Result<&str, String> {
+        match r#where.len() {
+            1 => return Ok(r#where.pop().unwrap()),
+            0 => return Err(String::from("Nie podales czlowieka")),
+            _ if r#where.iter().filter(|v| **v != r#where[0]).collect::<Vec<&&str>>().len() == 0 => return Ok(r#where.pop().unwrap()),
+            _ => {
+                println!("Doprecyzuj o co ci chodzilo");
+                let mut what = String::new();
+                io::stdin().read_line(&mut what).unwrap();
+                println!("{:?}", r#where);
+                r#where = r#where.iter()
+                    .filter(|v| v.starts_with(what.as_str().trim()))
+                    .map(|v| v.to_owned())
+                    .collect::<Vec<&'_ str>>();
+                println!("{}", what);
+                println!("{:?}", r#where);
+                return self.isolate(r#where);
+            }
+        }
+    }
+
     fn find<'a>(&'a self, mut what: &'a str) -> Result<Position, String> {
         let mut osoby = self.lista_osob.to_vec();
         osoby = osoby.iter()
             .filter(|v| v.starts_with(what))
             .map(|v| v.to_owned())
             .collect::<Vec<&'_ str>>();
-        match osoby.len() {
-            1 => what = osoby.pop().unwrap(),
-            0 => return Err(String::from("Nie podales czlowieka")),
-            _ => return Err(String::from("Twoje zapytanie obejmuje wiecej niz jednego czlowieka")),
+        match self.isolate(osoby) {
+            Err(e) => return Err(e),
+            Ok(v) => what = v,
         }
         for p in self.pokoje.iter().enumerate() {
             for v in p.1.iter().enumerate() {

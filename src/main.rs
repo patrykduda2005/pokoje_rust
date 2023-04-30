@@ -16,7 +16,7 @@ fn main() {
 
             gra.wyswietl_pokoje();
 
-            komenda = gra.get_input();
+            komenda = gra.get_command();
 
             clearscreen::clear().expect("Nie udało sie wyczyscic ekranu");
         }
