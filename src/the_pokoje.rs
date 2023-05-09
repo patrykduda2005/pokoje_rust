@@ -7,8 +7,10 @@ pub enum Command {
     Pokaz,
 }
 
+#[derive(Clone)]
 enum Zmiana<'a> {
     Replace(Vec<&'a str>, &'a str),
+    Czasomierz(u32, &'a Zmiana<'a>),
 }
 
 pub enum Position {
@@ -21,7 +23,9 @@ pub struct Pokoje<'a> {
     zewnatrz: Vec<&'a str>,
     zmiany: Vec<Zmiana<'a>>,
     lista_osob: Vec<&'a str>,
+    czas: u32,
 }
+
 
 impl Pokoje<'_> {
     pub fn new() -> Self {
@@ -31,6 +35,7 @@ impl Pokoje<'_> {
             zewnatrz: osoby.to_owned(),
             zmiany: vec![],
             lista_osob: osoby.to_owned(),
+            czas: 0,
         }
     }
 
@@ -226,8 +231,11 @@ impl Pokoje<'_> {
                 match self.znajdz_pare(osoba) {
                     Some(para) => {
                         match (osoba, para) {
+                            ("Kula energi", _) => {
+                                println!("BOOM");
+                            },
                             ("Forzaob", "Mumin") => {
-                                println!("Klony nieznanego człowieka (Forzaob i Mumin) połączyły się w wielką kulę energii i zniszczyły wszechświat.");
+                                println!("Klony nieznanego człowieka (Forzaob i Mumin) połączyły się w wielką kulę energii. Za nie dlugo kula zniszczy wszechswiat !");
                                 self.zmiany.push(Zmiana::Replace(vec!["Forzaob", "Mumin"], "Kula energi"))
                             },
                             ("Szary", "Lechański") => {
@@ -261,9 +269,22 @@ impl Pokoje<'_> {
                                 println!("Zyskales nowy przedmiot: Wódka !");
                                 self.zmiany.push(Zmiana::Replace(vec!["Flesh"], "Wódka"))
                             },
+                            ("Lutak", "Wódka") => {
+                                println!("Lutak staje się goofy-ya");
+                                println!("Lutak: Ale goofy-ya !");
+                                self.zmiany.push(Zmiana::Replace(vec!["Lutak", "Wódka"], "Goofy-ya Lutak"))
+                            },
+                            ("Duda", "Kula energi") => {
+                                println!("Duda wykorzystuje kule energi do maszyny klonujacej");
+                                self.zmiany.push(Zmiana::Replace(vec!["Kula energi"], "Maszyna klonujaca"))
+                            },
+                            (rzecz, "Maszyna klonujaca") => {
+                                println!("Klonowanie {}", rzecz);
+                                self.zmiany.push(Zmiana::Replace(vec!["Maszyna klonujaca"], rzecz))
+                            },
                             _ => (),
                         }
-                    }
+                    },
                     None => (),
                 }
             }
@@ -272,6 +293,7 @@ impl Pokoje<'_> {
 
     pub fn soft_reset(&self) -> Self {
         let mut nowy = self::Pokoje::new();
+        nowy.czas = self.czas + 1;
         for zmiana in self.zmiany.iter() {
             match zmiana {
                 Zmiana::Replace(ofiary, zamiana_na) => {
@@ -294,6 +316,12 @@ impl Pokoje<'_> {
                         forward_ofiary.push(*ofiara);
                     }
                     nowy.zmiany.push(Zmiana::Replace(forward_ofiary, zamiana_na));
+                }
+                Zmiana::Czasomierz(time, zmiana) => {
+                    if self.czas == time - 1 {
+                        let wlasciwa_zmiana = *zmiana;
+                        nowy.zmiany.push(wlasciwa_zmiana.clone());
+                    }
                 }
             }
         }
